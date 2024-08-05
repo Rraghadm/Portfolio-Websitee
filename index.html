@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portfolio Website</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"/>
+      
+  </head>
+  <body>
+    <header class="header">
+        <a href="#home" class="logo">Raghad <span>Mutlaq</span></a>
+        <i class="bx bx-menu" id="menu-icon"></i>
+        <nav class="navbar">
+            <a href="#home">Home </a>
+            <a href="#about">About </a>
+            <a href="experience">Experience</a>
+            <a href="contact">Contact</a>
+        </nav>
+    </header>
+    <section class="home" id="home ">
+    <div class="home-content">
+      <h1>Hi,It's<span>Raghad</span></h1>
+      <h3>I'm a <span>Frontend Developer</span></h3>
+      <p>A computer science student with a passion for programming,striving to develop skills and contribute to innovative tech solutions.<br>
+ </p>
+ <br><ul>
+   <li><strong>Name: </strong>Raghad Mutlaq</li>
+   <li><strong>Phone: </strong>0559281286</li>
+   <li><strong>Email:  </strong>           raghadamutlaq@gmail.com</li>
+ <li><strong>Jop title: </strong>Frontend Developer</li>
+</ul>
+<h3>Weather Information for <span>Riyadh</span></h3>
+
+<div id="weather-info">Loading...</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const apiKey = 'd2a695253eb003018f094b7b9b119a91'; 
+    const city = 'Riyadh'; 
+    const weatherInfoElement = document.getElementById('weather-info');
+    
+    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.weather && data.weather[0] && data.main) {
+          const temperature = data.main.temp;
+          const description = data.weather[0].description;
+          weatherInfoElement.textContent = `Current temperature in ${city}: ${temperature}°C with ${description}`;
+        } else {
+          weatherInfoElement.textContent = 'Unable to retrieve weather data.';
+        }
+      })
+      .catch(error => {
+        weatherInfoElement.textContent = 'Failed to load weather data.';
+        console.error('Error fetching the weather data:', error);
+      });
+  });
+</script>
+
+    </div>
+
+  
+<div class="home-img">
+  <img src="5b4d80f78dad09d3e4655bc24dd43ff5.jpg" alt=""> </div>
+
+</section>
+
+  
+  
+<section class="Experience" id="Experience">
+  <h2 class="heading">Experience</h2>
+  <div class="Experience-container">
+<div class="Experience-box">
+<div class="Experience-info">
+  <i class="bx bxs-devices"></i>
+  <h4 >Mobile App Development</h4>
+
+</div>
+</div>
+<div class="Experience-box">
+<div class="Experience-info">
+  <i class="bx bx-code"></i>
+  <h4>Frontend Development</h4>
+  
+</div>
+  </div>
+  <div class="Experience-box">
+    <div class="Experience-info">
+      <i class="bx bx-code-curly"></i>
+      <h4> Backend Development</h4>
+      
+    </div>
+      </div>
+  </div>
+</section>
+<section class="Contact" id="Contact">
+  <h2 class="heading">Contact <span>Me</span></h2>
+  <form action="">
+    <div class="input-group"> 
+      <div class="input-box">
+        <input type="text" id="name" placeholder="Full Name" required>  
+        <input type="email" id="email" placeholder="Email" required>   
+      </div>
+      <div class="input-box">
+        <input type="number" id="phone" placeholder="Phone Number" required>
+        <input type="text" id="subject" placeholder="Subject" required>
+      </div>
+    </div>
+    <div class="input-group-2">
+      <textarea id="message" rows="10" placeholder="Your Message" required></textarea>
+      <button type="submit" class="btn">Send Message</button>
+    </div>
+  </form>
+
+
+</section>
+
+<!-- Firebase SDKs -->
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+  import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyB-IvUgAwRjtKdUh7xNg1XOkRypaUWdN-k",
+    authDomain: "contactform-1e2f5.firebaseapp.com",
+    databaseURL: "https://contactform-1e2f5-default-rtdb.firebaseio.com",
+    projectId: "contactform-1e2f5",
+    storageBucket: "contactform-1e2f5.appspot.com",
+    messagingSenderId: "621006092640",
+    appId: "1:621006092640:web:25f11c8e16d83a6d334605",
+    measurementId: "G-29Q8TP5CQ7"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+
+  // Handle form submission
+  document.getElementById('contactForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const phone = document.getElementById('phone').value;
+    const subject = document.getElementById('subject').value;
+    const message = document.getElementById('message').value;
+
+    // Generate a unique key for each message
+    const newMessageKey = ref(database, 'contacts').push().key;
+
+    // Save to Firebase Realtime Database
+    set(ref(database, 'contacts/' + newMessageKey), {
+      name: name,
+      email: email,
+      phone: phone,
+      subject: subject,
+      message: message
+    }).then(() => {
+      alert('Message sent successfully!');
+      document.getElementById('contactForm').reset();
+    }).catch((error) => {
+      console.error('Error sending message:', error);
+      alert('Failed to send message.');
+    });
+  });
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
+
+    <script src="script.js"></script>
+  </body>
+</html>
